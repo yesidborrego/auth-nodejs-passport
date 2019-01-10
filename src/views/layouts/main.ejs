@@ -26,6 +26,11 @@
     </div>
   </nav>
   <div class="container mt-3">
+    <% if(signupMsg && signupMsg.length > 0) { %>
+      <div class="alert alert-danger">
+        <%= signupMsg %>
+      </div>
+    <% } %>
     <%- body %>
   </div>
 </body>

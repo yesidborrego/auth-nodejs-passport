@@ -1,6 +1,5 @@
 const passport = require('passport');
 
-
 // GET - controllers
 function home(req, res){
   res.render('home');
@@ -27,15 +26,6 @@ function get404(req, res) {
   res.render('404');
 }
 
-// POST - controllers
-function postSignup() {
-  
-}
-
-function postLogin() {
-  
-}
-
 module.exports = {
   home,
   getSignup,
@@ -43,6 +33,4 @@ module.exports = {
   getProfile,
   getLogout,
   get404,
-  postSignup,
-  postLogin
 }

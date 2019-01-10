@@ -1,11 +1,17 @@
 const path = require('path');
 const express = require('express');
+const session = require('express-session');
 const morgan = require('morgan');
 const engine = require('ejs-mate');
+const passport = require('passport');
+const flash = require('connect-flash');
 
 // Initializing
 const app = express();
-const routes = require('./routes/routes');
+const routes = require('./routes/routes'); // Importing Routes
+require('./database'); // Importing MongoDB connection
+require('./passport/local-auth'); // Importing configuration passport
+const { sessionConfig } = require('./keys'); // Importing session configuration
 
 // Settings
 app.set('port', process.env.PORT || 3000);
@@ -16,6 +22,16 @@ app.set('view engine', 'ejs');
 
 // Middlewares
 app.use(morgan('dev'));
+app.use(express.urlencoded({extended: false}));
+app.use(session(sessionConfig));
+app.use(flash())
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use((req, res, next) => {
+  app.locals.signupMsg = req.flash('signupMsg');
+  next();
+});
 
 // Routes
 app.use('/', routes);
