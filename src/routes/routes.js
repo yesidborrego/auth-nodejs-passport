@@ -7,7 +7,7 @@ const userController = require('../controllers/user');
 router.get('/', userController.home);
 router.get('/signup', userController.getSignup);
 router.get('/login', userController.getLogin);
-router.get('/profile', userController.getProfile);
+router.get('/profile', checkAuthenticated, userController.getProfile);
 router.get('/logout', userController.getLogout);
 
 
@@ -20,9 +20,18 @@ router.post('/signup', passport.authenticate('local-signup', {
   }
 ));
 
-router.post('/login', (req, res) => {
-  res.status(200).send('Login');
-});
+router.post('/login', passport.authenticate('local-login', {
+  successRedirect: '/profile',
+  failureRedirect: '/login',
+  passReqToCallback: true
+}));
+
+function checkAuthenticated(req, res, next) {
+  if(req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('/login');
+}
 
 router.get('*', userController.get404);
 

@@ -26,3 +26,18 @@ passport.use('local-signup', new LocalStrategy({
   await user.save();
   done(null, user);
 }));
+
+passport.use('local-login', new LocalStrategy({
+  usernameField: 'email',
+  passwordField: 'password',
+  passReqToCallback: true
+}, async (req, email, password, done) => {
+  let user = await User.findOne({email});
+  if(!user) {
+    return done(null, false, req.flash('loginMsg', 'User no found.'));
+  }
+  if(!user.comparePassword(password)) {
+    return done(null, false, req.flash('loginMsg', 'Email or password incorrect.'));
+  }
+  done(null, user);
+}));
